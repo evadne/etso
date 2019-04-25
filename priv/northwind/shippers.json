@@ -1,0 +1,17 @@
+[
+  {
+    "companyName": "Speedy Express",
+    "phone": "(503) 555-9831",
+    "shipperID": 1
+  },
+  {
+    "companyName": "United Package",
+    "phone": "(503) 555-3199",
+    "shipperID": 2
+  },
+  {
+    "companyName": "Federal Shipping",
+    "phone": "(503) 555-9931",
+    "shipperID": 3
+  }
+]
