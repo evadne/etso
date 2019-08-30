@@ -55,7 +55,13 @@ Afterwards, create a new [Ecto.Repo](https://hexdocs.pm/ecto/Ecto.Repo.html), wh
       use Ecto.Repo, otp_app: @otp_app, adapter: Etso.Adapter
     end
 
-Once this is done, you can use any struct against the Repo normally, as you would with any other Repo. Check out the [Northwind modules](https://github.com/evadne/etso/tree/master/test/support/northwind) for an example.
+Once this is done, you can use any Schema against the Repo normally, as you would with any other Repo. Check out the [Northwind modules](https://github.com/evadne/etso/tree/master/test/support/northwind) for an example.
+
+## Utilisation
+
+Originally, Etso was created to answer the question of whether ETS and Ecto can be married together. It has since found some uses in production applications, serving as a Data Repository for pre-defined nested content. This proved invaluable for rapid iteration.
+
+(If you have other Use Cases for this library, please add it here with a Pull Request.)
 
 ## Further Note
 
