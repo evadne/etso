@@ -6,32 +6,45 @@ defmodule Etso.MixProject do
       app: :etso,
       version: "0.1.0",
       elixir: "~> 1.8",
+      elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
-      description: description(),
       package: package(),
       deps: deps(),
       name: "Etso",
-      source_url: "https://github.com/evadne/etso"
+      description: "An ETS adapter for Ecto",
+      source_url: "https://github.com/evadne/etso",
+      docs: docs()
     ]
   end
 
-  def application, do: []
+  def application do
+    []
+  end
 
-  # Run "mix help deps" to learn about dependencies.
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_), do: ["lib"]
+
   defp deps do
     [
       {:ecto, "~> 3.0.1"},
-      {:jason, "~> 1.1", only: [:test], runtime: false}
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
+      {:jason, "~> 1.1", only: :test, runtime: false}
     ]
   end
 
-  defp description, do: "An ETS adapter for Ecto"
-
   defp package do
     [
+      maintainers: ["Evadne Wu"],
       files: package_files(),
       licenses: ["Apache 2.0"],
       links: %{"GitHub" => "https://github.com/evadne/etso"}
+    ]
+  end
+
+  defp docs do
+    [
+      main: "readme",
+      extras: ["README.md"]
     ]
   end
 
