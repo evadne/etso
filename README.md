@@ -31,3 +31,23 @@ The following features, for example, are missing:
 - Transactions
 - Migrations
 - Locking
+
+## Installation
+
+    defp deps do
+      [
+        {:etso, "~> 0.1.0"}
+      ]
+    end
+
+## Acknowledgements
+
+The Author wishes to thank:
+
+- [Wojtek Mach](https://github.com/wojtekmach), for the [inspiration](https://github.com/wojtekmach/ets_ecto) regarding creation of an Ecto adapter for ETS.
+
+- [Steven Holdsworth](https://github.com/holsee), for initial concept proofing and refinement.
+
+- [Igor Kopestenski](https://github.com/laymer), for initial reviews.
+
+- [David Schainker](https://github.com/schainks), for initial reviews, and for finding uses for this library.

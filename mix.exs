@@ -15,9 +15,10 @@ defmodule Etso.MixProject do
     ]
   end
 
-  def application, do: []
+  def application do
+    []
+  end
 
-  # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
       {:ecto, "~> 3.0.1"},
@@ -29,6 +30,7 @@ defmodule Etso.MixProject do
 
   defp package do
     [
+      maintainers: ["Evadne Wu"],
       files: package_files(),
       licenses: ["Apache 2.0"],
       links: %{"GitHub" => "https://github.com/evadne/etso"}
