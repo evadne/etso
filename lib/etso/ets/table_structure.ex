@@ -1,4 +1,10 @@
 defmodule Etso.ETS.TableStructure do
+  @moduledoc """
+  The ETS Table Structure module contains various convenience functions to aid the transformation
+  between Ecto Schemas (maps) and ETS entries (tuples). The primary key is moved to the head, in
+  accordance with ETS conventions. Composite primary keys can not be accepted, however.
+  """
+
   def field_names(schema) do
     fields = schema.__schema__(:fields)
     primary_key = schema.__schema__(:primary_key)

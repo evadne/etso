@@ -1,8 +1,7 @@
 defmodule Etso.Adapter.Meta do
-  defstruct repo: nil, meta_table_name: nil
+  @moduledoc false
 
-  @type t :: %__MODULE__{
-          repo: module(),
-          meta_table_name: term()
-        }
+  @type t :: %__MODULE__{repo: Ecto.Repo.t()}
+  @enforce_keys ~w(repo)a
+  defstruct repo: nil
 end
