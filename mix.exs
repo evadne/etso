@@ -10,6 +10,7 @@ defmodule Etso.MixProject do
       start_permanent: Mix.env() == :prod,
       package: package(),
       deps: deps(),
+      dialyzer: dialyzer(),
       name: "Etso",
       description: "An ETS adapter for Ecto",
       source_url: "https://github.com/evadne/etso",
@@ -26,9 +27,19 @@ defmodule Etso.MixProject do
 
   defp deps do
     [
-      {:ecto, "~> 3.0.1"},
+      {:ecto, "~> 3.0"},
+      {:dialyxir, "~> 1.0.0-rc.6", only: :dev, runtime: false},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
       {:jason, "~> 1.1", only: :test, runtime: false}
+    ]
+  end
+
+  defp dialyzer do
+    [
+      plt_add_apps: [:mix, :iex, :ex_unit],
+      flags: ~w(error_handling no_opaque race_conditions underspecs unmatched_returns)a,
+      ignore_warnings: "dialyzer-ignore-warnings.exs",
+      list_unused_filters: true
     ]
   end
 
@@ -51,9 +62,7 @@ defmodule Etso.MixProject do
   defp package_files do
     ~w(
       lib/etso/*
-      .formatter.exs
       mix.exs
-      README*
     )
   end
 end

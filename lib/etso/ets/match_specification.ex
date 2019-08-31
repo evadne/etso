@@ -1,4 +1,9 @@
 defmodule Etso.ETS.MatchSpecification do
+  @moduledoc """
+  The ETS Match Specifications module contains various functions which convert Ecto queries to
+  ETS Match Specifications in order to execute the given queries.
+  """
+
   def build(query, params) do
     {_, schema} = query.from.source
     field_names = Etso.ETS.TableStructure.field_names(schema)
