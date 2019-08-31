@@ -1,35 +1,54 @@
 defmodule Etso.Adapter.TableRegistry do
   @moduledoc """
-  Provides convenience functions used by the Table Server to register their ETS tables,
-  and by the Adapter itself to get the ETS tables.
+  Provides convenience function to spin up a Registry, which is used to hold the Table Servers
+  (registered by GenServer when starting up), alongside their ETS tables (registered when the
+  Table Server starts).
   """
 
-  def child_spec([repo]) do
-    Registry.child_spec(keys: :unique, name: name(repo))
+  @spec child_spec(Etso.repo()) :: Supervisor.child_spec()
+  @spec get_table(Etso.repo(), Etso.schema()) :: {:ok, Etso.table()} | {:error, term()}
+  @spec register_table(Etso.repo(), Etso.schema(), Etso.table()) :: :ok | {:error, term()}
+
+  alias Etso.Adapter.TableServer
+  alias Etso.Adapter.TableSupervisor
+
+  @doc """
+  Returns Child Specification for the Table Registry that will be associated with the `repo`.
+  """
+  def child_spec(repo) do
+    Registry.child_spec(keys: :unique, name: build_name(repo))
   end
 
-  def name(repo) do
-    Module.concat([repo, TableRegistry])
-  end
-
+  @doc """
+  Returns the ETS table associated with the given `repo` which is used to hold data for `schema`.
+  """
   def get_table(repo, schema) do
-    lookup_table(repo, schema) || start_table(repo, schema)
+    case lookup_table(repo, schema) do
+      {:ok, table_reference} -> {:ok, table_reference}
+      {:error, :not_found} -> start_table(repo, schema)
+    end
   end
 
+  @doc """
+  Registers the ETS table associated with the given `repo` which is used to hold data for `schema`.
+  """
   def register_table(repo, schema, table_reference) do
-    Registry.register(name(repo), {schema, :ets_table}, table_reference)
+    with {:ok, _} <- Registry.register(build_name(repo), {schema, :ets_table}, table_reference) do
+      :ok
+    end
   end
 
   defp lookup_table(repo, schema) do
-    case Registry.lookup(name(repo), {schema, :ets_table}) do
-      [{_, table_reference}] -> table_reference
-      [] -> nil
+    case Registry.lookup(build_name(repo), {schema, :ets_table}) do
+      [{_, table_reference}] -> {:ok, table_reference}
+      [] -> {:error, :not_found}
     end
   end
 
   defp start_table(repo, schema) do
-    {:ok, _} = ensure_server_started(repo, schema)
-    lookup_table(repo, schema)
+    with {:ok, _} <- ensure_server_started(repo, schema) do
+      lookup_table(repo, schema)
+    end
   end
 
   defp ensure_server_started(repo, schema) do
@@ -42,12 +61,12 @@ defmodule Etso.Adapter.TableRegistry do
   end
 
   defp start_server(repo, schema) do
-    server_module = Etso.Adapter.TableServer
-    server_name = {:via, Registry, {name(repo), schema}}
-    server_arguments = {repo, schema, server_name}
+    name = {:via, Registry, {build_name(repo), schema}}
+    child_spec = {TableServer, {repo, schema, name}}
+    TableSupervisor.start_child(repo, child_spec)
+  end
 
-    repo
-    |> Etso.Adapter.TableSupervisor.name()
-    |> DynamicSupervisor.start_child({server_module, server_arguments})
+  defp build_name(repo) do
+    Module.concat([repo, Enum.at(Module.split(__MODULE__), -1)])
   end
 end

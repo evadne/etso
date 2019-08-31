@@ -2,11 +2,11 @@
 
 ## Overview
 
-Etso is an [ETS](http://erlang.org/doc/man/ets.html) adapter, allowing you to use [Ecto](https://hexdocs.pm/ecto/Ecto.html) schemas with ETS tables.
+Etso is an [ETS][erlang-ets] adapter, allowing you to use `Ecto` schemas with ETS tables.
 
 Within this library, a bare-bones Ecto Adapter is provided. The Adapter transparently spins up ETS tables for each Ecto Repo and Schema combination. The tables are publicly accessible to enable concurrency, and tracked by reference to ensure encapsulation. Each ETS table is spun up by a dedicated Table Server under a shared Dynamic Supervisor.
 
-For a detailed look as to what is available, check out [Northwind Repo Test](https://github.com/evadne/etso/tree/master/test/northwind/repo_test.exs).
+For a detailed look as to what is available, check out [Northwind Repo Test][northwind-repo-test].
 
 ## Highlights & Benefits
 
@@ -24,13 +24,25 @@ Key points to consider when adopting this library are:
 
 The following features are working:
 
-- Basic query scenarios (C / R / U / D): insert all, insert one, get by ID, where, delete by ID.
+- Basic query scenarios (C / R / U / D)
+  - Insert all (`c:Ecto.Repo.insert_all/3`, etc.)
+  - Insert one (`c:Ecto.Repo.insert/2`, etc.)
+  - Get all (`c:Ecto.Repo.all/2`, etc.)
+  - Get by ID (`c:Ecto.Repo.get/3`, etc.)
+  - Get where (`Ecto.Query.where/3`, etc.)
+  - Delete by ID (`c:Ecto.Repo.delete/2`, etc.)
 - Selects
 - Assocs
 - Preloads
 
+The [Northwind Repo Test][northwind-repo-test] should give you a good idea of what’s included.
+
+### Missing Features
+
 The following features, for example, are missing:
 
+- Composite primary keys
+- Dynamic Repos (`c:Ecto.Repo.put_dynamic_repo/1`)
 - Aggregates (dynamic / static)
 - Joins
 - Windows
@@ -48,24 +60,26 @@ Using Etso is a two-step process. First, include it in your application’s depe
       ]
     end
 
-Afterwards, create a new [Ecto.Repo](https://hexdocs.pm/ecto/Ecto.Repo.html), which uses `Etso.Adapter`:
+Afterwards, create a new `Ecto.Repo`, which uses `Etso.Adapter`:
 
     defmodule MyApp.Repo do
       @otp_app Mix.Project.config()[:app]
       use Ecto.Repo, otp_app: @otp_app, adapter: Etso.Adapter
     end
 
-Once this is done, you can use any Schema against the Repo normally, as you would with any other Repo. Check out the [Northwind modules](https://github.com/evadne/etso/tree/master/test/support/northwind) for an example.
+Once this is done, you can use any Schema against the Repo normally, as you would with any other Repo. Check out the [Northwind modules][northwind] for an example.
 
 ## Utilisation
 
 Originally, Etso was created to answer the question of whether ETS and Ecto can be married together. It has since found some uses in production applications, serving as a Data Repository for pre-defined nested content. This proved invaluable for rapid iteration.
 
-(If you have other Use Cases for this library, please add it here with a Pull Request.)
+*If you have other Use Cases for this library, please add it here with a Pull Request.*
 
 ## Further Note
 
-This repository is extracted from a prior project [ETS Playground](https://github.com/evadne/ets-playground), which was created to support my session at ElixirConf EU 2019, [*Leveraging ETS Effectively.*](https://speakerdeck.com/evadne/leveraging-ets-effectively)
+This repository is extracted from a prior project [ETS Playground][evadne-ets-playground], which was created to support my session at ElixirConf EU 2019, [*Leveraging ETS Effectively.*][evadne-ets-deck]
+
+Specifically, this library was created to illustrate the point that ETS can serve as a scalable storage layer for data which changes infrequently. Check out the [Northwind Importer][northwind-importer] for an example.
 
 ## Acknowledgements
 
@@ -73,10 +87,18 @@ This project contains a copy of data obtained from the Northwind database, which
 
 The Author also wishes to thank the following individuals:
 
-- [Wojtek Mach](https://github.com/wojtekmach), for the [inspiration](https://github.com/wojtekmach/ets_ecto) regarding creation of an Ecto adapter for ETS.
+- [Wojtek Mach][wojtekmach], for the [inspiration](https://github.com/wojtekmach/ets_ecto) regarding creation of an Ecto adapter for ETS.
 
 - [Steven Holdsworth](https://github.com/holsee), for initial concept proofing and refinement.
 
 - [Igor Kopestenski](https://github.com/laymer), for initial reviews.
 
 - [David Schainker](https://github.com/schainks), for initial reviews, and for finding uses for this library.
+
+[erlang-ets]: http://erlang.org/doc/man/ets.html
+[northwind]: https://github.com/evadne/etso/tree/master/test/support/northwind
+[northwind-importer]: https://github.com/evadne/etso/tree/master/test/support/northwind/importer.ex
+[northwind-repo-test]: https://github.com/evadne/etso/blob/master/test/northwind/repo_test.exs
+[evadne-ets-playground]: https://github.com/evadne/ets-playground
+[evadne-ets-deck]: https://speakerdeck.com/evadne/leveraging-ets-effectively
+[wojtekmach]: https://github.com/wojtekmach

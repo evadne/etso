@@ -62,9 +62,7 @@ defmodule Etso.MixProject do
   defp package_files do
     ~w(
       lib/etso/*
-      .formatter.exs
       mix.exs
-      README*
     )
   end
 end
