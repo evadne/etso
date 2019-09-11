@@ -75,6 +75,8 @@ Originally, Etso was created to answer the question of whether ETS and Ecto can 
 
 *If you have other Use Cases for this library, please add it here with a Pull Request.*
 
+- The [Erlef Website](https://github.com/erlef/website) is using Etso to cache and query news and event posts that are parsed and imported into the Repo on application startup. 
+
 ## Further Note
 
 This repository is extracted from a prior project [ETS Playground][evadne-ets-playground], which was created to support my session at ElixirConf EU 2019, [*Leveraging ETS Effectively.*][evadne-ets-deck]
