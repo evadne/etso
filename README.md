@@ -1,8 +1,6 @@
 # Etso
 
-## Overview
-
-Etso is an [ETS][erlang-ets] adapter, allowing you to use `Ecto` schemas with ETS tables.
+**Etso** is an [ETS][erlang-ets] adapter, allowing you to use `Ecto` schemas with ETS tables.
 
 Within this library, a bare-bones Ecto Adapter is provided. The Adapter transparently spins up ETS tables for each Ecto Repo and Schema combination. The tables are publicly accessible to enable concurrency, and tracked by reference to ensure encapsulation. Each ETS table is spun up by a dedicated Table Server under a shared Dynamic Supervisor.
 
@@ -79,7 +77,7 @@ Originally, Etso was created to answer the question of whether ETS and Ecto can 
 
 ## Further Note
 
-This repository is extracted from a prior project [ETS Playground][evadne-ets-playground], which was created to support my session at ElixirConf EU 2019, [*Leveraging ETS Effectively.*][evadne-ets-deck]
+This repository is extracted from a prior project [ETS Playground][evadne-ets-playground], which was created to support a session at ElixirConf EU 2019, [*Leveraging ETS Effectively.*][evadne-ets-deck]
 
 Specifically, this library was created to illustrate the point that ETS can serve as a scalable storage layer for data which changes infrequently. Check out the [Northwind Importer][northwind-importer] for an example.
 
