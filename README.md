@@ -52,18 +52,22 @@ The following features, for example, are missing:
 
 Using Etso is a two-step process. First, include it in your application’s dependencies:
 
-    defp deps do
-      [
-        {:etso, "~> 0.1.1"}
-      ]
-    end
+```elixir
+defp deps do
+  [
+    {:etso, "~> 0.1.1"}
+  ]
+end
+```
 
 Afterwards, create a new `Ecto.Repo`, which uses `Etso.Adapter`:
 
-    defmodule MyApp.Repo do
-      @otp_app Mix.Project.config()[:app]
-      use Ecto.Repo, otp_app: @otp_app, adapter: Etso.Adapter
-    end
+```elixir
+defmodule MyApp.Repo do
+  @otp_app Mix.Project.config()[:app]
+  use Ecto.Repo, otp_app: @otp_app, adapter: Etso.Adapter
+end
+```
 
 Once this is done, you can use any Schema against the Repo normally, as you would with any other Repo. Check out the [Northwind modules][northwind] for an example.
 
