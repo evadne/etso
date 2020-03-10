@@ -25,8 +25,20 @@ defmodule Etso.Adapter do
   @doc false
   def init(config) do
     {:ok, repo} = Keyword.fetch(config, :repo)
+    persist_to_dets = Keyword.get(config, :persist_to_dets, false)
+
+    dets_folder =
+      Keyword.get(config, :dets_folder, nil)
+      |> __MODULE__.Meta.validate_dets_folder!()
+
     child_spec = __MODULE__.Supervisor.child_spec(repo)
-    adapter_meta = %__MODULE__.Meta{repo: repo}
+
+    adapter_meta = %__MODULE__.Meta{
+      repo: repo,
+      persist_to_dets: persist_to_dets,
+      dets_folder: dets_folder
+    }
+
     {:ok, child_spec, adapter_meta}
   end
 
