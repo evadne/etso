@@ -35,6 +35,15 @@ defmodule Northwind.RepoTest do
     |> Repo.all()
   end
 
+  test "Where In" do
+    res =
+      Model.Employee
+      |> where([x], x.employee_id in ^[3, 5, 7])
+      |> Repo.all()
+    assert length(res) == 3
+    assert res |> Enum.map(& &1.employee_id) |> Enum.sort() == [3, 5, 7]
+  end
+
   test "Select Where" do
     Model.Employee
     |> where([x], x.title == "Vice President Sales" and x.first_name == "Andrew")
