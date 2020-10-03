@@ -5,7 +5,7 @@ defmodule Northwind.RepoTest do
 
   setup do
     repo_id = __MODULE__
-    repo_start = {Northwind.Repo, :start_link, []}
+    repo_start = {Repo, :start_link, []}
     {:ok, _} = start_supervised(%{id: repo_id, start: repo_start})
     :ok = Importer.perform()
   end

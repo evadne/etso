@@ -11,16 +11,18 @@ defmodule Northwind.StorageTest do
   end
 
   test "repo started with Up status" do
-    assert :up = Repo.__adapter__.storage_status(Repo.config)
+    adapter = Repo.__adapter__()
+    assert :up = adapter.storage_status(Repo.config())
     assert_empty()
   end
 
   test "repo up/down roundtrip is no-op" do
+    adapter = Repo.__adapter__()
     :ok = Importer.perform()
     assert_not_empty()
-    assert :ok = Repo.__adapter__.storage_down(Repo.config)
+    assert :ok = adapter.storage_down(Repo.config())
     assert_not_empty()
-    assert :ok = Repo.__adapter__.storage_up(Repo.config)
+    assert :ok = adapter.storage_up(Repo.config())
     assert_not_empty()
   end
 
