@@ -35,6 +35,52 @@ defmodule Northwind.RepoTest do
     |> Repo.all()
   end
 
+  test "Where In None" do
+    employee_ids = []
+
+    Model.Employee
+    |> where([x], x.employee_id in ^employee_ids)
+    |> select([x], x.employee_id)
+    |> Repo.all()
+    |> Enum.sort()
+    |> (&assert(&1 == employee_ids)).()
+  end
+
+  test "Where In One" do
+    employee_ids = [3]
+
+    Model.Employee
+    |> where([x], x.employee_id in ^employee_ids)
+    |> select([x], x.employee_id)
+    |> Repo.all()
+    |> Enum.sort()
+    |> (&assert(&1 == employee_ids)).()
+  end
+
+  test "Where In Multiple" do
+    employee_ids = [3, 5, 7]
+
+    Model.Employee
+    |> where([x], x.employee_id in ^employee_ids)
+    |> select([x], x.employee_id)
+    |> Repo.all()
+    |> Enum.sort()
+    |> (&assert(&1 == employee_ids)).()
+  end
+
+  test "Where In Nested" do
+    employee_ids = [3, 5, 7]
+    employee_first_names = ["Janet"]
+
+    Model.Employee
+    |> where([x], x.employee_id in ^employee_ids)
+    |> where([x], x.first_name in ^employee_first_names)
+    |> select([x], x.employee_id)
+    |> Repo.all()
+    |> Enum.sort()
+    |> (&assert(&1 == [3])).()
+  end
+
   test "Select Where" do
     Model.Employee
     |> where([x], x.title == "Vice President Sales" and x.first_name == "Andrew")

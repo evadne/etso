@@ -1,8 +1,6 @@
 # Etso
 
-## Overview
-
-Etso is an [ETS][erlang-ets] adapter, allowing you to use `Ecto` schemas with ETS tables.
+**Etso** is an [ETS][erlang-ets] adapter, allowing you to use `Ecto` schemas with ETS tables.
 
 Within this library, a bare-bones Ecto Adapter is provided. The Adapter transparently spins up ETS tables for each Ecto Repo and Schema combination. The tables are publicly accessible to enable concurrency, and tracked by reference to ensure encapsulation. Each ETS table is spun up by a dedicated Table Server under a shared Dynamic Supervisor.
 
@@ -54,18 +52,22 @@ The following features, for example, are missing:
 
 Using Etso is a two-step process. First, include it in your application’s dependencies:
 
-    defp deps do
-      [
-        {:etso, "~> 0.1.1"}
-      ]
-    end
+```elixir
+defp deps do
+  [
+    {:etso, "~> 0.1.2"}
+  ]
+end
+```
 
 Afterwards, create a new `Ecto.Repo`, which uses `Etso.Adapter`:
 
-    defmodule MyApp.Repo do
-      @otp_app Mix.Project.config()[:app]
-      use Ecto.Repo, otp_app: @otp_app, adapter: Etso.Adapter
-    end
+```elixir
+defmodule MyApp.Repo do
+  @otp_app Mix.Project.config()[:app]
+  use Ecto.Repo, otp_app: @otp_app, adapter: Etso.Adapter
+end
+```
 
 Once this is done, you can use any Schema against the Repo normally, as you would with any other Repo. Check out the [Northwind modules][northwind] for an example.
 
@@ -75,9 +77,11 @@ Originally, Etso was created to answer the question of whether ETS and Ecto can 
 
 *If you have other Use Cases for this library, please add it here with a Pull Request.*
 
+- The [Erlef Website](https://github.com/erlef/website) is using Etso to cache and query news and event posts that are parsed and imported into the Repo on application startup. 
+
 ## Further Note
 
-This repository is extracted from a prior project [ETS Playground][evadne-ets-playground], which was created to support my session at ElixirConf EU 2019, [*Leveraging ETS Effectively.*][evadne-ets-deck]
+This repository is extracted from a prior project [ETS Playground][evadne-ets-playground], which was created to support a session at ElixirConf EU 2019, [*Leveraging ETS Effectively.*][evadne-ets-deck]
 
 Specifically, this library was created to illustrate the point that ETS can serve as a scalable storage layer for data which changes infrequently. Check out the [Northwind Importer][northwind-importer] for an example.
 
@@ -95,6 +99,8 @@ The Author also wishes to thank the following individuals:
 
 - [David Schainker](https://github.com/schainks), for initial reviews, and for finding uses for this library.
 
+- [Masanori Iwasaki][curi1119], for [support of `for…in` queries][pr-6].
+
 [erlang-ets]: http://erlang.org/doc/man/ets.html
 [northwind]: https://github.com/evadne/etso/tree/master/test/support/northwind
 [northwind-importer]: https://github.com/evadne/etso/tree/master/test/support/northwind/importer.ex
@@ -102,3 +108,5 @@ The Author also wishes to thank the following individuals:
 [evadne-ets-playground]: https://github.com/evadne/ets-playground
 [evadne-ets-deck]: https://speakerdeck.com/evadne/leveraging-ets-effectively
 [wojtekmach]: https://github.com/wojtekmach
+[curi1119]: https://github.com/curi1119
+[pr-6]: https://github.com/evadne/etso/pull/6

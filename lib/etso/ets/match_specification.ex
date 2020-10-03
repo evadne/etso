@@ -79,10 +79,14 @@ defmodule Etso.ETS.MatchSpecification do
     field_name
   end
 
-  defp resolve_field_values(params, {:^, [], indices}) do
-    for index <- indices do
+  defp resolve_field_values(params, {:^, [], [index, count]}) do
+    for index <- index..(index + count - 1) do
       Enum.at(params, index)
     end
+  end
+
+  defp resolve_field_values(params, {:^, [], [index]}) do
+    Enum.at(params, index)
   end
 
   defp get_field_index(field_names, field_name) do
