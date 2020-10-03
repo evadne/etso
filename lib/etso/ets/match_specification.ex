@@ -89,6 +89,10 @@ defmodule Etso.ETS.MatchSpecification do
     Enum.at(params, index)
   end
 
+  defp resolve_field_values(_params, values) when is_list(values) do
+    values
+  end
+
   defp get_field_index(field_names, field_name) do
     1 + Enum.find_index(field_names, fn x -> x == field_name end)
   end

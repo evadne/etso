@@ -81,6 +81,28 @@ defmodule Northwind.RepoTest do
     |> (&assert(&1 == [3])).()
   end
 
+  test "Where In Nested With and Without Pin" do
+    employee_ids = [3, 5, 7]
+
+    Model.Employee
+    |> where([x], x.employee_id in ^employee_ids)
+    |> where([x], x.first_name in ["Janet"])
+    |> select([x], x.employee_id)
+    |> Repo.all()
+    |> Enum.sort()
+    |> (&assert(&1 == [3])).()
+  end
+
+  test "Where In Nested Without Pin" do
+    Model.Employee
+    |> where([x], x.employee_id in [3, 5, 7])
+    |> where([x], x.first_name in ["Janet"])
+    |> select([x], x.employee_id)
+    |> Repo.all()
+    |> Enum.sort()
+    |> (&assert(&1 == [3])).()
+  end
+
   test "Select Where" do
     Model.Employee
     |> where([x], x.title == "Vice President Sales" and x.first_name == "Andrew")
