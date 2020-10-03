@@ -99,6 +99,8 @@ The Author also wishes to thank the following individuals:
 
 - [David Schainker](https://github.com/schainks), for initial reviews, and for finding uses for this library.
 
+- [Masanori Iwasaki][curi1119], for [support of `for…in` queries][pr-6].
+
 [erlang-ets]: http://erlang.org/doc/man/ets.html
 [northwind]: https://github.com/evadne/etso/tree/master/test/support/northwind
 [northwind-importer]: https://github.com/evadne/etso/tree/master/test/support/northwind/importer.ex
@@ -106,3 +108,5 @@ The Author also wishes to thank the following individuals:
 [evadne-ets-playground]: https://github.com/evadne/ets-playground
 [evadne-ets-deck]: https://speakerdeck.com/evadne/leveraging-ets-effectively
 [wojtekmach]: https://github.com/wojtekmach
+[curi1119]: https://github.com/curi1119
+[pr-6]: https://github.com/evadne/etso/pull/6
