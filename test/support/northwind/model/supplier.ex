@@ -6,6 +6,7 @@ defmodule Northwind.Model.Supplier do
     field :company_name, :string
     field :contact_name, :string
     field :contact_title, :string
+
     # field :supplier_id, :integer
 
     embeds_one :address, Model.Address

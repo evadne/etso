@@ -5,6 +5,7 @@ defmodule Northwind.Model.Shipper do
   schema "shippers" do
     field :company_name, :string
     field :phone, :string
+
     # field :shipper_id, :integer
 
     has_many :orders, Model.Order,
