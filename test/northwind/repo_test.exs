@@ -128,4 +128,10 @@ defmodule Northwind.RepoTest do
     |> Repo.all()
     |> Repo.preload(shipper: :orders)
   end
+
+  test "Employees / Teams / Teams Preload" do
+    Model.Employee
+    |> Repo.all()
+    |> Repo.preload(:teams)
+  end
 end

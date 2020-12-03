@@ -1,0 +1,22 @@
+[
+  {
+    "teamID": 1,
+    "description": "Research and Development",
+    "name": "R&D"
+  },
+  {
+    "teamID": 2,
+    "description": "Customer Service",
+    "name": "Service"
+  },
+  {
+    "teamID": 3,
+    "description": "Tech Support",
+    "name": "Support"
+  },
+  {
+    "teamID": 4,
+    "description": "Sales",
+    "name": "Sales"
+  }
+]

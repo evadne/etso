@@ -28,6 +28,10 @@ defmodule Northwind.Model.Employee do
     has_many :orders, Model.Order,
       foreign_key: :employee_id,
       references: :employee_id
+
+    many_to_many :teams, Northwind.Model.Team,
+      join_through: Northwind.Model.EmployeeTeam,
+      join_keys: [employee_id: :employee_id, team_id: :team_id]
   end
 
   def changeset(params \\ %{}) do

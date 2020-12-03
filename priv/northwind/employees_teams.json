@@ -1,0 +1,46 @@
+[
+  {
+    "employeeID": 1,
+    "teamID": 1
+  },
+  {
+    "employeeID": 1,
+    "teamID": 3
+  },
+  {
+    "employeeID": 1,
+    "teamID": 4
+  },
+  {
+    "employeeID": 2,
+    "teamID": 1
+  },
+  {
+    "employeeID": 3,
+    "teamID": 2
+  },
+  {
+    "employeeID": 3,
+    "teamID": 4
+  },
+  {
+    "employeeID": 4,
+    "teamID": 3
+  },
+  {
+    "employeeID": 4,
+    "teamID": 1
+  },
+  {
+    "employeeID": 5,
+    "teamID": 2
+  },
+  {
+    "employeeID": 6,
+    "teamID": 2
+  },
+  {
+    "employeeID": 6,
+    "teamID": 1
+  }
+]
