@@ -1,7 +1,6 @@
 defmodule Northwind.Model.EmployeeTeam do
-  use Ecto.Schema
+  use Northwind.Model
 
-  @primary_key false
   schema "employees_teams" do
     belongs_to :employee, Northwind.Model.Employee, references: :employee_id
     belongs_to :team, Northwind.Model.Team, references: :team_id
@@ -9,9 +8,17 @@ defmodule Northwind.Model.EmployeeTeam do
     timestamps()
   end
 
-  def changeset(struct, params \\ %{}) do
-    struct
-    |> Ecto.Changeset.cast(params, [:user_id, :organization_id])
-    |> Ecto.Changeset.validate_required([:user_id, :organization_id])
+  def changeset(params \\ %{}) do
+    changeset(%__MODULE__{}, params)
+  end
+
+  def changeset(model, params) do
+    fields = __MODULE__.__schema__(:fields)
+    embeds = __MODULE__.__schema__(:embeds)
+    cast_model = cast(model, params, fields -- embeds)
+
+    Enum.reduce(embeds, cast_model, fn embed, model ->
+      cast_embed(model, embed)
+    end)
   end
 end

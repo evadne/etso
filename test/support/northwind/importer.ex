@@ -6,6 +6,8 @@ defmodule Northwind.Importer do
     Model.Category,
     Model.Customer,
     Model.Employee,
+    Model.Team,
+    Model.EmployeeTeam,
     Model.Order,
     Model.Product,
     Model.Shipper,

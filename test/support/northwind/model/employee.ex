@@ -29,9 +29,9 @@ defmodule Northwind.Model.Employee do
       foreign_key: :employee_id,
       references: :employee_id
 
-    many_to_many :teams, Northwind.Model.Team,
-      join_through: Northwind.Model.EmployeeTeam,
-      join_keys: [employee_id: :employee_id, team_id: :team_id]
+    has_many :employee_teams, Model.EmployeeTeam,
+      foreign_key: :employee_id,
+      references: :employee_id
   end
 
   def changeset(params \\ %{}) do

@@ -30,6 +30,8 @@ defmodule Northwind.ImporterTest do
     refute match?([], Repo.all(Model.Category))
     refute match?([], Repo.all(Model.Customer))
     refute match?([], Repo.all(Model.Employee))
+    refute match?([], Repo.all(Model.Team))
+    refute match?([], Repo.all(Model.EmployeeTeam))
     refute match?([], Repo.all(Model.Order))
     refute match?([], Repo.all(Model.Product))
     refute match?([], Repo.all(Model.Shipper))

@@ -2,14 +2,14 @@ defmodule Northwind.Model.Team do
   use Northwind.Model
   @primary_key {:team_id, :id, autogenerate: false}
 
-  schema "team" do
+  schema "teams" do
     # field :team_id, :integer
     field :description, :string
     field :name, :string
 
-    many_to_many :members, Northwind.Model.Employee,
-      join_through: Northwind.Model.EmployeeTeam,
-      join_keys: [team_id: :team_id, employee_id: :employee_id]
+    has_many :members, Northwind.Model.EmployeeTeam,
+      foreign_key: :team_id,
+      references: :team_id
   end
 
   def changeset(params \\ %{}) do
