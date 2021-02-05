@@ -49,9 +49,10 @@ defmodule Etso.ETS.MatchSpecification do
     field_name = resolve_field_name(field)
     field_index = get_field_index(field_names, field_name)
 
-    resolve_field_values(params, value)
-    |> Enum.map(&{:==, :"$#{field_index}", &1})
-    |> Enum.reduce(&{:orelse, &1, &2})
+    case resolve_field_values(params, value) do
+      [] -> []
+      values -> List.to_tuple([:orelse | Enum.map(values, &{:==, :"$#{field_index}", &1})])
+    end
   end
 
   defp build_condition(field_names, _, {{:., [], [{:&, [], [0]}, field_name]}, [], []}) do
