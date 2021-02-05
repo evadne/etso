@@ -101,6 +101,8 @@ The Author also wishes to thank the following individuals:
 
 - [Masanori Iwasaki][curi1119], for [support of `for…in` queries][pr-6].
 
+- [Kohei Noda][pobo380], for [fixing nested `{:orelse, …}` queries][pr-10].
+
 [erlang-ets]: http://erlang.org/doc/man/ets.html
 [northwind]: https://github.com/evadne/etso/tree/master/test/support/northwind
 [northwind-importer]: https://github.com/evadne/etso/tree/master/test/support/northwind/importer.ex
@@ -110,3 +112,5 @@ The Author also wishes to thank the following individuals:
 [wojtekmach]: https://github.com/wojtekmach
 [curi1119]: https://github.com/curi1119
 [pr-6]: https://github.com/evadne/etso/pull/6
+[pobo380]: https://github.com/pobo380
+[pr-10]: https://github.com/evadne/etso/pull/10
