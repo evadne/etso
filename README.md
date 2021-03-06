@@ -55,7 +55,7 @@ Using Etso is a two-step process. First, include it in your application’s depe
 ```elixir
 defp deps do
   [
-    {:etso, "~> 0.1.4"}
+    {:etso, "~> 0.1.5"}
   ]
 end
 ```
@@ -103,6 +103,8 @@ The Author also wishes to thank the following individuals:
 
 - [Kohei Noda][pobo380], for [fixing nested `{:orelse, …}` queries][pr-10].
 
+- [William Martins][wmartins], for [fixing primary key unicity check issues][gh-7].
+
 [erlang-ets]: http://erlang.org/doc/man/ets.html
 [northwind]: https://github.com/evadne/etso/tree/master/test/support/northwind
 [northwind-importer]: https://github.com/evadne/etso/tree/master/test/support/northwind/importer.ex
@@ -114,3 +116,5 @@ The Author also wishes to thank the following individuals:
 [pr-6]: https://github.com/evadne/etso/pull/6
 [pobo380]: https://github.com/pobo380
 [pr-10]: https://github.com/evadne/etso/pull/10
+[wmartins]: https://github.com/wmartins
+[gh-7]: https://github.com/evadne/etso/issues/7
