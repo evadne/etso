@@ -21,7 +21,7 @@ defmodule Etso.Adapter.Behaviour.Schema do
     ets_field_names = TableStructure.field_names(schema)
     ets_changes = TableStructure.fields_to_tuple(ets_field_names, fields)
     ets_result = :ets.insert_new(ets_table, ets_changes)
-    if ets_result, do: {:ok, []}, else: {:invalid, []}
+    if ets_result, do: {:ok, []}, else: {:invalid, [unique: "primary_key"]}
   end
 
   def update(%{repo: repo}, %{schema: schema}, fields, filters, [], _) do
