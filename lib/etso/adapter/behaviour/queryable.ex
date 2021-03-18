@@ -3,6 +3,7 @@ defmodule Etso.Adapter.Behaviour.Queryable do
 
   alias Etso.Adapter.TableRegistry
   alias Etso.ETS.MatchSpecification
+  alias Etso.ETS.TableSorter
 
   def prepare(:all, query) do
     {:nocache, query}
@@ -12,7 +13,12 @@ defmodule Etso.Adapter.Behaviour.Queryable do
     {_, schema} = query.from.source
     {:ok, ets_table} = TableRegistry.get_table(repo, schema)
     ets_match = MatchSpecification.build(query, params)
-    ets_objects = :ets.select(ets_table, [ets_match])
+
+    ets_objects =
+      ets_table
+      |> :ets.select([ets_match])
+      |> TableSorter.sort(query)
+
     {length(ets_objects), ets_objects}
   end
 
