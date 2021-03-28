@@ -16,6 +16,7 @@ defmodule Etso.Adapter do
   @behaviour Ecto.Adapter
   @behaviour Ecto.Adapter.Schema
   @behaviour Ecto.Adapter.Queryable
+  @behaviour Ecto.Adapter.Transaction
 
   defmacro __before_compile__(_opts), do: :ok
 
@@ -43,7 +44,7 @@ defmodule Etso.Adapter do
   def dumpers(:embed_id, type), do: [type, Ecto.UUID]
   def dumpers(_, type), do: [type]
 
-  for module <- [__MODULE__.Behaviour.Schema, __MODULE__.Behaviour.Queryable] do
+  for module <- [__MODULE__.Behaviour.Schema, __MODULE__.Behaviour.Queryable, __MODULE__.Behaviour.Transaction] do
     for {name, arity} <- module.__info__(:functions) do
       args = Enum.map(1..arity, &{:"arg_#{&1}", [], Elixir})
 
