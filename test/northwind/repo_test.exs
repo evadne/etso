@@ -134,4 +134,11 @@ defmodule Northwind.RepoTest do
     |> Repo.all()
     |> Repo.preload([:employee, :customer])
   end
+
+  test "Attempting a rollback raises `Etso.NotImplementedException`" do
+    assert_raise Etso.NotImplementedException, fn ->
+      # passing anything into rollback causes this exception
+      Repo.rollback(nil)
+    end
+  end
 end

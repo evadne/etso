@@ -1,17 +1,12 @@
 defmodule Etso.Adapter.Behaviour.Transaction do
   @moduledoc false
+  # in_transaction?/1 enables parallel preloading
+  def in_transaction?(_), do: false
 
-  def in_transaction?(_) do
-    # never in a transaction?
-    false
-  end
+  #  no-op does nothing in ecto, this ensures rollback is not used
+  def rollback(_, _), do: raise(Etso.NotImplementedException)
 
-  def rollback(_, _) do
-    # do nothing.
-  end
-
-  def transaction(_, _, func) do
-    # just return the result of func
-    {:ok, func.()}
-  end
+  # all repo calls seem to rely on this and if returning anything other than {:ok, value} lots of tests fail
+  # https://hexdocs.pm/ecto/Ecto.Adapter.Transaction.html#c:transaction/3
+  def transaction(_, _, func), do: {:ok, func.()}
 end
