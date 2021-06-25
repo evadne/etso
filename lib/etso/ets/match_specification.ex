@@ -55,6 +55,10 @@ defmodule Etso.ETS.MatchSpecification do
     end
   end
 
+  defp build_condition(field_names, params, {:is_nil, [], [field]}) do
+    {:==, build_condition(field_names, params, field), nil}
+  end
+
   defp build_condition(field_names, _, {{:., [], [{:&, [], [0]}, field_name]}, [], []}) do
     :"$#{get_field_index(field_names, field_name)}"
   end
