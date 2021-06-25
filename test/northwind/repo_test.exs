@@ -88,6 +88,17 @@ defmodule Northwind.RepoTest do
     |> Repo.all()
   end
 
+  test "Select Where Is Nil" do
+    query = Model.Employee |> where([x], is_nil(x.title))
+    assert [] = Repo.all(query)
+
+    changes = %{first_name: "Ghost", employee_id: 4096}
+    changeset = Model.Employee.changeset(changes)
+    {:ok, %{employee_id: employee_id} = employee} = Repo.insert(changeset)
+    assert [%{employee_id: ^employee_id}] = Repo.all(query)
+    Repo.delete(employee)
+  end
+
   test "Select / Update" do
     Model.Employee
     |> where([x], x.title == "Vice President Sales")
