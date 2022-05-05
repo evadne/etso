@@ -139,4 +139,10 @@ defmodule Northwind.RepoTest do
     |> Repo.all()
     |> Repo.preload(shipper: :orders)
   end
+
+  test "Support json_extract_path expression" do
+    from(e in Model.Employee)
+    |> where([e], e.metadata["twitter"] == "@andrew_fuller")
+    |> Repo.one!()
+  end
 end

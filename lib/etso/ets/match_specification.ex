@@ -59,6 +59,15 @@ defmodule Etso.ETS.MatchSpecification do
     {:==, build_condition(field_names, params, field), nil}
   end
 
+  defp build_condition(field_names, _, {:json_extract_path, [], paths}) do
+    [parent, fields] = paths
+    [field | remaining] = fields
+    acc = {:map_get, field, build_condition(field_names, nil, parent)}
+    Enum.reduce(remaining, acc, fn field, acc ->
+      {:map_get, field, acc}
+    end)
+  end
+
   defp build_condition(field_names, _, {{:., [], [{:&, [], [0]}, field_name]}, [], []}) do
     :"$#{get_field_index(field_names, field_name)}"
   end

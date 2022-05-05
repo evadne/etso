@@ -38,6 +38,15 @@ defmodule Etso.Adapter.TableRegistry do
     end
   end
 
+  @spec active_tables(module()) :: [any()]
+  def active_tables(repo) do
+    conditions = [{{{:_, :"$1"}, :_, :_}, [{:==, :"$1", :ets_table}], [:"$_"]}]
+
+    build_name(repo)
+    |> Registry.select(conditions)
+    |> Enum.map(fn {_key, {_pid, table_reference}} -> table_reference end)
+  end
+
   defp lookup_table(repo, schema) do
     case Registry.lookup(build_name(repo), {schema, :ets_table}) do
       [{_, table_reference}] -> {:ok, table_reference}

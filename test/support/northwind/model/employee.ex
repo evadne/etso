@@ -13,6 +13,7 @@ defmodule Northwind.Model.Employee do
     field :hire_date, :date
     field :notes, :string
     field :territory_ids, {:array, :integer}
+    field :metadata, :map, default: %{}
 
     embeds_one :address, Model.Address
 

@@ -8,7 +8,7 @@ defmodule Etso.Adapter.Behaviour.Schema do
   def autogenerate(:binary_id), do: Ecto.UUID.bingenerate()
   def autogenerate(:embed_id), do: Ecto.UUID.bingenerate()
 
-  def insert_all(%{repo: repo}, %{schema: schema}, _, entries, _, _, _) do
+  def insert_all(%{repo: repo}, %{schema: schema}, _, entries, _, _, _, _) do
     {:ok, ets_table} = TableRegistry.get_table(repo, schema)
     ets_field_names = TableStructure.field_names(schema)
     ets_changes = TableStructure.entries_to_tuples(ets_field_names, entries)
