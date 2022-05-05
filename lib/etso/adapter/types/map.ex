@@ -39,5 +39,7 @@ defmodule Etso.Ecto.MapType do
     Enum.map(value, &map_keys_to_string/1)
   end
 
+  defp map_keys_to_string(value) when is_boolean(value), do: value
+  defp map_keys_to_string(value) when is_atom(value), do: to_string(value)
   defp map_keys_to_string(value), do: value
 end
