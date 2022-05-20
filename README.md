@@ -55,7 +55,7 @@ Using Etso is a two-step process. First, include it in your application’s depe
 ```elixir
 defp deps do
   [
-    {:etso, "~> 0.1.6"}
+    {:etso, "~> 1.0.0"}
   ]
 end
 ```

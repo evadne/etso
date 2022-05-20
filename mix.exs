@@ -4,7 +4,7 @@ defmodule Etso.MixProject do
   def project do
     [
       app: :etso,
-      version: "0.1.6",
+      version: "1.0.0",
       elixir: "~> 1.8",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
@@ -62,6 +62,7 @@ defmodule Etso.MixProject do
   defp package_files do
     ~w(
       lib/etso/*
+      lib/etso.ex
       mix.exs
     )
   end
