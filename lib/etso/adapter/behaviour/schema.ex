@@ -1,16 +1,17 @@
 defmodule Etso.Adapter.Behaviour.Schema do
   @moduledoc false
+  @behaviour Ecto.Adapter.Schema
 
   alias Etso.Adapter.TableRegistry
   alias Etso.ETS.TableStructure
 
+  @impl Ecto.Adapter.Schema
   def autogenerate(:id), do: :erlang.unique_integer()
   def autogenerate(:binary_id), do: Ecto.UUID.bingenerate()
   def autogenerate(:embed_id), do: Ecto.UUID.bingenerate()
 
-  def insert_all(%{repo: repo}, %{schema: schema}, _, entries, _, _, _placeholders \\ [], _) do
-    # Ecto 3 had `insert_all/7`,
-    # This was then changed to `insert_all/8`, adding placeholders as `[term()]`
+  @impl Ecto.Adapter.Schema
+  def insert_all(%{repo: repo}, %{schema: schema}, _, entries, _, _, _, _) do
     {:ok, ets_table} = TableRegistry.get_table(repo, schema)
     ets_field_names = TableStructure.field_names(schema)
     ets_changes = TableStructure.entries_to_tuples(ets_field_names, entries)
@@ -18,6 +19,7 @@ defmodule Etso.Adapter.Behaviour.Schema do
     if ets_result, do: {length(ets_changes), nil}, else: {0, nil}
   end
 
+  @impl Ecto.Adapter.Schema
   def insert(%{repo: repo}, %{schema: schema}, fields, _, _, _) do
     {:ok, ets_table} = TableRegistry.get_table(repo, schema)
     ets_field_names = TableStructure.field_names(schema)
@@ -26,6 +28,7 @@ defmodule Etso.Adapter.Behaviour.Schema do
     if ets_result, do: {:ok, []}, else: {:invalid, [unique: "primary_key"]}
   end
 
+  @impl Ecto.Adapter.Schema
   def update(%{repo: repo}, %{schema: schema}, fields, filters, [], _) do
     {:ok, ets_table} = TableRegistry.get_table(repo, schema)
     [key_name] = schema.__schema__(:primary_key)
@@ -35,6 +38,7 @@ defmodule Etso.Adapter.Behaviour.Schema do
     if ets_result, do: {:ok, []}, else: {:error, :stale}
   end
 
+  @impl Ecto.Adapter.Schema
   def delete(%{repo: repo}, %{schema: schema}, filters, _) do
     {:ok, ets_table} = TableRegistry.get_table(repo, schema)
     [key_name] = schema.__schema__(:primary_key)
