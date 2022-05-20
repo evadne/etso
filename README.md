@@ -107,6 +107,8 @@ The Author also wishes to thank the following individuals:
 
 - [Soichiro Nishizawa][soichiro-nishizawa], for [providing the implementation of sorted results][gh-12].
 
+- [Doug W.][harmon25], for [providing insights into parallel preloads][gh-13].
+
 [erlang-ets]: http://erlang.org/doc/man/ets.html
 [northwind]: https://github.com/evadne/etso/tree/master/test/support/northwind
 [northwind-importer]: https://github.com/evadne/etso/tree/master/test/support/northwind/importer.ex
@@ -122,3 +124,5 @@ The Author also wishes to thank the following individuals:
 [gh-7]: https://github.com/evadne/etso/issues/7
 [soichiro-nishizawa]: https://github.com/soichiro-nishizawa
 [gh-12]: https://github.com/evadne/etso/issues/12
+[harmon25]: https://github.com/harmon25
+[gh-13]: https://github.com/evadne/etso/issues/13
