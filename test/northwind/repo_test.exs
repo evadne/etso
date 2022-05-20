@@ -22,8 +22,11 @@ defmodule Northwind.RepoTest do
   end
 
   test "Insert Employees" do
-    changes = [%{first_name: "Fred", employee_id: 1}, %{first_name: "Steven", employee_id: 2}]
+    changes = [%{first_name: "Fred", employee_id: 100}, %{first_name: "Steven", employee_id: 200}]
+    nil = Repo.get(Model.Employee, 100)
+
     Repo.insert_all(Model.Employee, changes)
+    %{first_name: "Fred"} = Repo.get(Model.Employee, 100)
   end
 
   test "List all Employees Again" do
