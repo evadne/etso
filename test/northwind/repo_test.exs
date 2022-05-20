@@ -21,6 +21,14 @@ defmodule Northwind.RepoTest do
     Repo.delete(employee)
   end
 
+  test "Insert Employees" do
+    changes = [%{first_name: "Fred", employee_id: 100}, %{first_name: "Steven", employee_id: 200}]
+    nil = Repo.get(Model.Employee, 100)
+
+    Repo.insert_all(Model.Employee, changes)
+    %{first_name: "Fred"} = Repo.get(Model.Employee, 100)
+  end
+
   test "List all Employees Again" do
     Repo.all(Model.Employee)
   end
@@ -138,5 +146,32 @@ defmodule Northwind.RepoTest do
     Model.Order
     |> Repo.all()
     |> Repo.preload(shipper: :orders)
+  end
+
+  test "Order / Shipper + Employee Preloading" do
+    Model.Order
+    |> Repo.all()
+    |> Repo.preload([[shipper: :orders], :employee, :customer], in_parallel: true)
+  end
+
+  test "Order / Shipper / Orders Preloading before all()" do
+    Model.Order
+    |> preload([_], shipper: :orders)
+    |> Repo.all()
+  end
+
+  test "Order By Desc company_name, Asc phone" do
+    sorted_etso =
+      Model.Shipper
+      |> order_by([x], desc: x.company_name, asc: x.phone)
+      |> Repo.all()
+
+    sorted_code =
+      Model.Shipper
+      |> Repo.all()
+      |> Enum.sort_by(& &1.company_name, :desc)
+      |> Enum.sort_by(& &1.phone)
+
+    assert sorted_etso == sorted_code
   end
 end
