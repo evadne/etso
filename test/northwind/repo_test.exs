@@ -21,6 +21,11 @@ defmodule Northwind.RepoTest do
     Repo.delete(employee)
   end
 
+  test "Insert Employees" do
+    changes = [%{first_name: "Fred", employee_id: 1}, %{first_name: "Steven", employee_id: 2}]
+    Repo.insert_all(Model.Employee, changes)
+  end
+
   test "List all Employees Again" do
     Repo.all(Model.Employee)
   end
