@@ -1,13 +1,16 @@
 defmodule Etso.Adapter.Behaviour.Queryable do
   @moduledoc false
+  @behaviour Ecto.Adapter.Queryable
 
   alias Etso.Adapter.TableRegistry
   alias Etso.ETS.MatchSpecification
 
+  @impl Ecto.Adapter.Queryable
   def prepare(:all, query) do
     {:nocache, query}
   end
 
+  @impl Ecto.Adapter.Queryable
   def execute(%{repo: repo}, _, {:nocache, query}, params, _) do
     {_, schema} = query.from.source
     {:ok, ets_table} = TableRegistry.get_table(repo, schema)
@@ -16,6 +19,7 @@ defmodule Etso.Adapter.Behaviour.Queryable do
     {length(ets_objects), ets_objects}
   end
 
+  @impl Ecto.Adapter.Queryable
   def stream(%{repo: repo}, _, {:nocache, query}, params, options) do
     {_, schema} = query.from.source
     {:ok, ets_table} = TableRegistry.get_table(repo, schema)
