@@ -8,7 +8,9 @@ defmodule Etso.Adapter.Behaviour.Schema do
   def autogenerate(:binary_id), do: Ecto.UUID.bingenerate()
   def autogenerate(:embed_id), do: Ecto.UUID.bingenerate()
 
-  def insert_all(%{repo: repo}, %{schema: schema}, _, entries, _, _, _) do
+  def insert_all(%{repo: repo}, %{schema: schema}, _, entries, _, _, _placeholders \\ [], _) do
+    # Ecto 3 had `insert_all/7`,
+    # This was then changed to `insert_all/8`, adding placeholders as `[term()]`
     {:ok, ets_table} = TableRegistry.get_table(repo, schema)
     ets_field_names = TableStructure.field_names(schema)
     ets_changes = TableStructure.entries_to_tuples(ets_field_names, entries)
