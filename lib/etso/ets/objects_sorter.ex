@@ -1,7 +1,7 @@
 defmodule Etso.ETS.ObjectsSorter do
   @moduledoc """
-  The Objects Sorter is responsible for sorting results returned from ETS according to the sort
-  predicates provided in the query.
+  The ETS Objects Sorter module is responsible for sorting results returned from ETS according to
+  the sort predicates provided in the query.
   """
 
   def sort(ets_objects, %Ecto.Query{order_bys: []}) do
