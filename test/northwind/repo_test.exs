@@ -148,6 +148,12 @@ defmodule Northwind.RepoTest do
     |> Repo.preload(shipper: :orders)
   end
 
+  test "Order / Shipper + Employee Preloading" do
+    Model.Order
+    |> Repo.all()
+    |> Repo.preload([[shipper: :orders], :employee, :customer], in_parallel: true)
+  end
+
   test "Order / Shipper / Orders Preloading before all()" do
     Model.Order
     |> preload([_], shipper: :orders)

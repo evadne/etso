@@ -39,7 +39,7 @@ defmodule Etso.Adapter do
 
   @doc false
   @impl Ecto.Adapter
-  def checked_out?(_), do: true
+  def checked_out?(_), do: false
 
   @doc false
   @impl Ecto.Adapter
