@@ -147,4 +147,25 @@ defmodule Northwind.RepoTest do
     |> Repo.all()
     |> Repo.preload(shipper: :orders)
   end
+
+  test "Order / Shipper / Orders Preloading before all()" do
+    Model.Order
+    |> preload([_], shipper: :orders)
+    |> Repo.all()
+  end
+
+  test "Order By Desc company_name, Asc phone" do
+    sorted_etso =
+      Model.Shipper
+      |> order_by([x], desc: x.company_name, asc: x.phone)
+      |> Repo.all()
+
+    sorted_code =
+      Model.Shipper
+      |> Repo.all()
+      |> Enum.sort_by(& &1.company_name, :desc)
+      |> Enum.sort_by(& &1.phone)
+
+    assert sorted_etso == sorted_code
+  end
 end
