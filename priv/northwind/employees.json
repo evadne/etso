@@ -26,7 +26,22 @@
     ],
     "title": "Vice President Sales",
     "titleOfCourtesy": "Dr.",
-    "metadata": {"twitter": "@andrew_fuller"}
+    "metadata": {
+      "twitter": "@andrew_fuller",
+      "photos": [
+        {
+          "storage": "a",
+          "url": "https://example.com/a"
+        },
+        {
+          "storage": "b",
+          "url": "https://example.com/b"
+        }
+      ],
+      "documents": {
+        "passport": "verified"
+      }
+    }
   },
   {
     "address": {

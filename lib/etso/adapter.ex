@@ -13,8 +13,6 @@ defmodule Etso.Adapter do
       end
   """
 
-  alias Etso.Adapter.TableRegistry
-
   @behaviour Ecto.Adapter
   @behaviour Ecto.Adapter.Schema
   @behaviour Ecto.Adapter.Queryable
@@ -32,7 +30,7 @@ defmodule Etso.Adapter do
     {:ok, repo} = Keyword.fetch(config, :repo)
     child_spec = __MODULE__.Supervisor.child_spec(repo)
     adapter_meta = %__MODULE__.Meta{repo: repo}
-    {:ok, child_spec, Map.from_struct(adapter_meta)}
+    {:ok, child_spec, adapter_meta}
   end
 
   @doc false
@@ -53,18 +51,7 @@ defmodule Etso.Adapter do
   @impl Ecto.Adapter
   def dumpers(:binary_id, type), do: [type, Ecto.UUID]
   def dumpers(:embed_id, type), do: [type, Ecto.UUID]
-  def dumpers(:map, type), do: [type, Etso.Ecto.MapType]
   def dumpers(_, type), do: [type]
-
-  @doc """
-  Delete all data from the tables.
-  """
-  @spec flush_tables(module()) :: :ok
-  def flush_tables(repo) do
-    repo
-    |> TableRegistry.active_tables()
-    |> Enum.each(& :ets.delete_all_objects(&1) == true)
-  end
 
   for {implementation_module, behaviour_module} <- [
         {__MODULE__.Behaviour.Schema, Ecto.Adapter.Schema},
