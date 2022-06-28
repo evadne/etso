@@ -10,7 +10,7 @@ defmodule Northwind.RepoTest do
     :ok = Importer.perform()
   end
 
-  test "list" do
+  test "List All" do
     Repo.all(Model.Employee)
   end
 
@@ -175,20 +175,44 @@ defmodule Northwind.RepoTest do
     assert sorted_etso == sorted_code
   end
 
-  describe "json_extract_path" do
-    test "Support json_extract_path expression" do
+  test "Delete All" do
+    assert Repo.delete_all(Model.Employee)
+    assert [] == Repo.all(Model.Employee)
+  end
+
+  test "Delete Where" do
+    query = Model.Employee |> where([e], e.employee_id in [1, 5])
+    assert [a, b] = Repo.all(query)
+    assert {2, nil} = Repo.delete_all(query)
+    assert [] == Repo.all(query)
+    refute [] == Repo.all(Model.Employee)
+  end
+
+  test "Delete Where Select" do
+    query = Model.Employee |> where([e], e.employee_id in [1, 5])
+    assert [a, b] = Repo.all(query)
+    assert {2, list} = Repo.delete_all(query |> select([e], {e, e.employee_id}))
+    assert is_list(list)
+    assert Enum.any?(list, &(elem(&1, 1) == 1))
+    assert Enum.any?(list, &(elem(&1, 1) == 5))
+    assert [] = Repo.all(query)
+    refute [] == Repo.all(Model.Employee)
+  end
+
+  describe "With JSON Extract Paths" do
+    test "using literal value" do
       Model.Employee
       |> where([e], e.metadata["twitter"] == "@andrew_fuller")
       |> Repo.one!()
     end
 
-    test "Support nested json_extract_path expression" do
+    test "using brackets" do
       Model.Employee
       |> where([e], e.metadata["documents"]["passport"] == "verified")
       |> Repo.one!()
     end
 
-    test "Support variable pinning in nested json_extract_path expression" do
+    test "with variable pinning" do
       field = "passport"
 
       Model.Employee
@@ -202,7 +226,7 @@ defmodule Northwind.RepoTest do
       |> assert()
     end
 
-    test "Support accessing JSON arrays in json_extract_path expression" do
+    test "with arrays" do
       Model.Employee
       |> select([e], json_extract_path(e.metadata, ["photos", 0, "url"]))
       |> where([e], e.metadata["documents"]["passport"] == "verified")
@@ -225,13 +249,25 @@ defmodule Northwind.RepoTest do
       |> assert()
     end
 
-    test "Support where/in" do
+    test "with where/in" do
       Model.Employee
       |> where([e], e.metadata["documents"]["passport"] in ~w(verified))
       |> select([e], e.metadata["photos"][1]["url"])
       |> Repo.one!()
       |> (&(&1 == "https://example.com/b")).()
       |> assert()
+    end
+
+    test "in deletion" do
+      Model.Employee
+      |> where([e], e.metadata["documents"]["passport"] == "verified")
+      |> Repo.delete_all()
+
+      assert_raise Ecto.NoResultsError, fn ->
+        Model.Employee
+        |> where([e], e.metadata["documents"]["passport"] == "verified")
+        |> Repo.one!()
+      end
     end
   end
 end

@@ -15,8 +15,8 @@ defmodule Etso.ETS.MatchSpecification do
     {_, schema} = query.from.source
     field_names = Etso.ETS.TableStructure.field_names(schema)
     match_head = build_head(field_names)
-    match_conditions = build_conditions(field_names, params, query.wheres)
-    match_body = [build_body(field_names, query.select.fields)]
+    match_conditions = build_conditions(field_names, params, query)
+    match_body = [build_body(field_names, query)]
     {match_head, match_conditions, match_body}
   end
 
@@ -24,8 +24,8 @@ defmodule Etso.ETS.MatchSpecification do
     List.to_tuple(Enum.map(1..length(field_names), fn x -> :"$#{x}" end))
   end
 
-  defp build_conditions(field_names, params, query_wheres) do
-    Enum.reduce(query_wheres, [], fn %Ecto.Query.BooleanExpr{expr: expression}, acc ->
+  defp build_conditions(field_names, params, %Ecto.Query{wheres: wheres}) do
+    Enum.reduce(wheres, [], fn %Ecto.Query.BooleanExpr{expr: expression}, acc ->
       [build_condition(field_names, params, expression) | acc]
     end)
   end
@@ -76,7 +76,11 @@ defmodule Etso.ETS.MatchSpecification do
     value
   end
 
-  defp build_body(field_names, fields) do
+  defp build_body(_, %Ecto.Query{select: nil}) do
+    []
+  end
+
+  defp build_body(field_names, %Ecto.Query{select: %{fields: fields}}) do
     for field <- fields do
       resolve_field_target(field_names, field)
     end
