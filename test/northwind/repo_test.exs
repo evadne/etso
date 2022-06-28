@@ -174,4 +174,64 @@ defmodule Northwind.RepoTest do
 
     assert sorted_etso == sorted_code
   end
+
+  describe "json_extract_path" do
+    test "Support json_extract_path expression" do
+      Model.Employee
+      |> where([e], e.metadata["twitter"] == "@andrew_fuller")
+      |> Repo.one!()
+    end
+
+    test "Support nested json_extract_path expression" do
+      Model.Employee
+      |> where([e], e.metadata["documents"]["passport"] == "verified")
+      |> Repo.one!()
+    end
+
+    test "Support variable pinning in nested json_extract_path expression" do
+      field = "passport"
+
+      Model.Employee
+      |> where([e], e.metadata["documents"][^field] == "verified")
+      |> Repo.one!()
+
+      Model.Employee
+      |> select([e], json_extract_path(e.metadata, ["documents", "passport"]))
+      |> Repo.all()
+      |> Enum.any?(&(&1 == "verified"))
+      |> assert()
+    end
+
+    test "Support accessing JSON arrays in json_extract_path expression" do
+      Model.Employee
+      |> select([e], json_extract_path(e.metadata, ["photos", 0, "url"]))
+      |> where([e], e.metadata["documents"]["passport"] == "verified")
+      |> Repo.one!()
+      |> (&(&1 == "https://example.com/a")).()
+      |> assert()
+
+      Model.Employee
+      |> where([e], e.metadata["documents"]["passport"] == "verified")
+      |> select([e], e.metadata["photos"][0]["url"])
+      |> Repo.one!()
+      |> (&(&1 == "https://example.com/a")).()
+      |> assert()
+
+      Model.Employee
+      |> select([e], e.metadata["photos"][1]["url"])
+      |> where([e], e.metadata["documents"]["passport"] == "verified")
+      |> Repo.one!()
+      |> (&(&1 == "https://example.com/b")).()
+      |> assert()
+    end
+
+    test "Support where/in" do
+      Model.Employee
+      |> where([e], e.metadata["documents"]["passport"] in ~w(verified))
+      |> select([e], e.metadata["photos"][1]["url"])
+      |> Repo.one!()
+      |> (&(&1 == "https://example.com/b")).()
+      |> assert()
+    end
+  end
 end
