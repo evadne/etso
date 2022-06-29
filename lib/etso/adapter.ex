@@ -28,8 +28,8 @@ defmodule Etso.Adapter do
   @impl Ecto.Adapter
   def init(config) do
     {:ok, repo} = Keyword.fetch(config, :repo)
-    child_spec = __MODULE__.Supervisor.child_spec(repo)
-    adapter_meta = %__MODULE__.Meta{repo: repo}
+    adapter_meta = %__MODULE__.Meta{repo: repo, reference: make_ref()}
+    child_spec = __MODULE__.Supervisor.child_spec(adapter_meta)
     {:ok, child_spec, adapter_meta}
   end
 

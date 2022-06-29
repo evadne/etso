@@ -4,24 +4,26 @@ defmodule Etso.Adapter.TableSupervisor do
   Servers.
   """
 
-  @spec child_spec(Etso.repo()) :: Supervisor.child_spec()
-  @spec start_child(Etso.repo(), {module(), term()}) :: DynamicSupervisor.on_start_child()
+  alias Etso.Adapter.Meta
+
+  @spec child_spec(Etso.adapter_meta()) :: Supervisor.child_spec()
+  @spec start_child(Etso.adapter_meta(), {module(), term()}) :: DynamicSupervisor.on_start_child()
 
   @doc """
   Returns Child Specification for the Table Supervisor that will be associated with the `repo`.
   """
-  def child_spec(repo) do
-    DynamicSupervisor.child_spec(strategy: :one_for_one, name: build_name(repo))
+  def child_spec(%Meta{} = adapter_meta) do
+    DynamicSupervisor.child_spec(strategy: :one_for_one, name: build_name(adapter_meta))
   end
 
   @doc """
   Starts the Child under the Table Supervisor associated with the `repo`.
   """
-  def start_child(repo, child_spec) do
-    DynamicSupervisor.start_child(build_name(repo), child_spec)
+  def start_child(%Meta{} = adapter_meta, child_spec) do
+    DynamicSupervisor.start_child(build_name(adapter_meta), child_spec)
   end
 
-  defp build_name(repo) do
-    Module.concat([repo, Enum.at(Module.split(__MODULE__), -1)])
+  defp build_name(%Meta{} = adapter_meta) do
+    {:via, Etso.Registry, {adapter_meta.repo, adapter_meta.reference, __MODULE__}}
   end
 end

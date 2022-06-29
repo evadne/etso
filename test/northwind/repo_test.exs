@@ -270,4 +270,39 @@ defmodule Northwind.RepoTest do
       end
     end
   end
+
+  describe "Dynamic Repo" do
+    test "works with function" do
+      Repo.with_dynamic_repo(:a, fn ->
+        changes = %{first_name: "Evadne", employee_id: 1024}
+        changeset = Model.Employee.changeset(changes)
+        {:ok, _employee} = Repo.insert(changeset)
+        assert Repo.get(Model.Employee, 1024)
+      end)
+
+      Repo.with_dynamic_repo(:b, fn ->
+        refute Repo.get(Model.Employee, 1024)
+      end)
+    end
+
+    test "works persistently" do
+      # Note that `name: nil` must be passed explicitly to start multiple copies, otherwise the
+      # name of the repo will be the name of the module
+
+      {:ok, lhs} = Repo.start_link(name: nil)
+      {:ok, rhs} = Repo.start_link(name: nil)
+
+      Repo.put_dynamic_repo(lhs)
+      changes = %{first_name: "Evadne", employee_id: 1024}
+      changeset = Model.Employee.changeset(changes)
+      {:ok, _employee} = Repo.insert(changeset)
+      assert Repo.get(Model.Employee, 1024)
+
+      Repo.put_dynamic_repo(rhs)
+      refute Repo.get(Model.Employee, 1024)
+
+      Repo.put_dynamic_repo(lhs)
+      assert Repo.get(Model.Employee, 1024)
+    end
+  end
 end

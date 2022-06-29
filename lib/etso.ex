@@ -3,7 +3,7 @@ defmodule Etso do
   Top-level module for Etso.
   """
 
-  @type repo :: Ecto.Repo.t()
+  @type adapter_meta :: Etso.Adapter.Meta.t()
   @type schema :: module()
   @type table :: :ets.tab()
 end
