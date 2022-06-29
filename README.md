@@ -29,9 +29,14 @@ The following features are working:
   - Get by ID (`c:Ecto.Repo.get/3`, etc.)
   - Get where (`Ecto.Query.where/3`, etc.)
   - Delete by ID (`c:Ecto.Repo.delete/2`, etc.)
+  - Delete all
+  - Delete where
 - Selects
+  - Select in
+  - Select via JSON path
 - Assocs
 - Preloads
+- Dynamic Repos (`c:Ecto.Repo.put_dynamic_repo/1`)
 
 The [Northwind Repo Test][northwind-repo-test] should give you a good idea of what’s included.
 
@@ -40,7 +45,6 @@ The [Northwind Repo Test][northwind-repo-test] should give you a good idea of wh
 The following features, for example, are missing:
 
 - Composite primary keys
-- Dynamic Repos (`c:Ecto.Repo.put_dynamic_repo/1`)
 - Aggregates (dynamic / static)
 - Joins
 - Windows
@@ -78,6 +82,10 @@ Originally, Etso was created to answer the question of whether ETS and Ecto can 
 *If you have other Use Cases for this library, please add it here with a Pull Request.*
 
 - The [Erlef Website](https://github.com/erlef/website) is using Etso to cache and query news and event posts that are parsed and imported into the Repo on application startup. 
+
+## Supervision Tree
+
+The Etso application holds a Registry (Etso.Registry), which is responsible for tracking every Table Server across every Repo.
 
 ## Further Note
 

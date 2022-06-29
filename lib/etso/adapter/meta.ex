@@ -1,15 +1,18 @@
 defmodule Etso.Adapter.Meta do
-  @moduledoc false
+  @moduledoc """
+  Represents the runtime metadata held by the adapter when the underlying Repo has been started.
+  """
 
   @type t :: %__MODULE__{
           repo: Ecto.Repo.t(),
+          reference: reference(),
           cache: :ets.tab() | nil,
           pid: pid() | nil,
           stacktrace: true | false
         }
 
-  @enforce_keys ~w(repo)a
-  defstruct repo: nil, cache: nil, pid: nil, stacktrace: false
+  @enforce_keys ~w(repo reference)a
+  defstruct repo: nil, reference: nil, cache: nil, pid: nil, stacktrace: false
 
   @behaviour Access
   defdelegate get(v, key, default), to: Map

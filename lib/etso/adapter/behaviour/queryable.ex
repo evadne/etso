@@ -2,7 +2,7 @@ defmodule Etso.Adapter.Behaviour.Queryable do
   @moduledoc false
   @behaviour Ecto.Adapter.Queryable
 
-  alias Etso.Adapter.TableRegistry
+  alias Etso.Adapter.Meta
   alias Etso.ETS.MatchSpecification
   alias Etso.ETS.ObjectsSorter
 
@@ -22,9 +22,9 @@ defmodule Etso.Adapter.Behaviour.Queryable do
   end
 
   @impl Ecto.Adapter.Queryable
-  def execute(%{repo: repo}, _, {:nocache, {:select, query}}, params, _) do
+  def execute(%Meta{} = meta, _, {:nocache, {:select, query}}, params, _) do
     {_, schema} = query.from.source
-    {:ok, ets_table} = TableRegistry.get_table(repo, schema)
+    {:ok, ets_table} = Etso.Registry.ensure(meta, schema)
     ets_match = MatchSpecification.build(query, params)
     ets_objects = :ets.select(ets_table, [ets_match])
     ets_count = length(ets_objects)
@@ -32,9 +32,9 @@ defmodule Etso.Adapter.Behaviour.Queryable do
   end
 
   @impl Ecto.Adapter.Queryable
-  def execute(%{repo: repo}, _, {:nocache, {:delete_all_objects, query}}, params, _) do
+  def execute(%Meta{} = meta, _, {:nocache, {:delete_all_objects, query}}, params, _) do
     {_, schema} = query.from.source
-    {:ok, ets_table} = TableRegistry.get_table(repo, schema)
+    {:ok, ets_table} = Etso.Registry.ensure(meta, schema)
     ets_match = MatchSpecification.build(query, params)
     ets_objects = query.select && ObjectsSorter.sort(:ets.select(ets_table, [ets_match]), query)
     ets_count = :ets.info(ets_table, :size)
@@ -43,9 +43,9 @@ defmodule Etso.Adapter.Behaviour.Queryable do
   end
 
   @impl Ecto.Adapter.Queryable
-  def execute(%{repo: repo}, _, {:nocache, {:match_delete, query}}, params, _) do
+  def execute(%Meta{} = meta, _, {:nocache, {:match_delete, query}}, params, _) do
     {_, schema} = query.from.source
-    {:ok, ets_table} = TableRegistry.get_table(repo, schema)
+    {:ok, ets_table} = Etso.Registry.ensure(meta, schema)
     ets_match = MatchSpecification.build(query, params)
     ets_objects = query.select && ObjectsSorter.sort(:ets.select(ets_table, [ets_match]), query)
     {ets_match_head, ets_match_body, _} = ets_match
@@ -55,9 +55,9 @@ defmodule Etso.Adapter.Behaviour.Queryable do
   end
 
   @impl Ecto.Adapter.Queryable
-  def stream(%{repo: repo}, _, {:nocache, {:select, query}}, params, options) do
+  def stream(%Meta{} = meta, _, {:nocache, {:select, query}}, params, options) do
     {_, schema} = query.from.source
-    {:ok, ets_table} = TableRegistry.get_table(repo, schema)
+    {:ok, ets_table} = Etso.Registry.ensure(meta, schema)
     ets_match = MatchSpecification.build(query, params)
     ets_limit = Keyword.get(options, :max_rows, 500)
     stream_start_fun = fn -> stream_start(ets_table, ets_match, ets_limit) end
