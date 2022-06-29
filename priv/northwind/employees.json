@@ -25,7 +25,23 @@
       1581
     ],
     "title": "Vice President Sales",
-    "titleOfCourtesy": "Dr."
+    "titleOfCourtesy": "Dr.",
+    "metadata": {
+      "twitter": "@andrew_fuller",
+      "photos": [
+        {
+          "storage": "a",
+          "url": "https://example.com/a"
+        },
+        {
+          "storage": "b",
+          "url": "https://example.com/b"
+        }
+      ],
+      "documents": {
+        "passport": "verified"
+      }
+    }
   },
   {
     "address": {
