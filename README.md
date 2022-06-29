@@ -55,7 +55,7 @@ Using Etso is a two-step process. First, include it in your application’s depe
 ```elixir
 defp deps do
   [
-    {:etso, "~> 1.0.1"}
+    {:etso, "~> 1.1.0"}
   ]
 end
 ```
@@ -109,6 +109,8 @@ The Author also wishes to thank the following individuals:
 
 - [Doug W.][harmon25], for [providing insights into parallel preloads][gh-13].
 
+- [Atanda Rasheed][heywhy], for [support of JSON extract paths][gh-20].
+
 [erlang-ets]: http://erlang.org/doc/man/ets.html
 [northwind]: https://github.com/evadne/etso/tree/master/test/support/northwind
 [northwind-importer]: https://github.com/evadne/etso/tree/master/test/support/northwind/importer.ex
@@ -126,3 +128,5 @@ The Author also wishes to thank the following individuals:
 [gh-12]: https://github.com/evadne/etso/issues/12
 [harmon25]: https://github.com/harmon25
 [gh-13]: https://github.com/evadne/etso/issues/13
+[heywhy]: https://github.com/heywhy
+[gh-20]: https://github.com/evadne/etso/issues/20
