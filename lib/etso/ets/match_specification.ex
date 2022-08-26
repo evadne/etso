@@ -13,20 +13,20 @@ defmodule Etso.ETS.MatchSpecification do
 
   def build(query, params) do
     {_, schema} = query.from.source
-    field_names = Etso.ETS.TableStructure.field_names(schema)
-    match_head = build_head(field_names)
-    match_conditions = build_conditions(field_names, params, query)
-    match_body = [build_body(field_names, query)]
+    field_sources = Etso.ETS.TableStructure.field_sources(schema)
+    match_head = build_head(field_sources)
+    match_conditions = build_conditions(field_sources, params, query)
+    match_body = [build_body(field_sources, query)]
     {match_head, match_conditions, match_body}
   end
 
-  defp build_head(field_names) do
-    List.to_tuple(Enum.map(1..length(field_names), fn x -> :"$#{x}" end))
+  defp build_head(field_sources) do
+    List.to_tuple(Enum.map(1..length(field_sources), fn x -> :"$#{x}" end))
   end
 
-  defp build_conditions(field_names, params, %Ecto.Query{wheres: wheres}) do
+  defp build_conditions(field_sources, params, %Ecto.Query{wheres: wheres}) do
     Enum.reduce(wheres, [], fn %Ecto.Query.BooleanExpr{expr: expression}, acc ->
-      [build_condition(field_names, params, expression) | acc]
+      [build_condition(field_sources, params, expression) | acc]
     end)
   end
 
@@ -37,22 +37,22 @@ defmodule Etso.ETS.MatchSpecification do
   defmacrop guard_operator(operator), do: operator
 
   for operator <- ~w(== != < > <= >= and or)a do
-    defp build_condition(field_names, params, {unquote(operator), [], [lhs, rhs]}) do
-      lhs_condition = build_condition(field_names, params, lhs)
-      rhs_condition = build_condition(field_names, params, rhs)
+    defp build_condition(field_sources, params, {unquote(operator), [], [lhs, rhs]}) do
+      lhs_condition = build_condition(field_sources, params, lhs)
+      rhs_condition = build_condition(field_sources, params, rhs)
       {guard_operator(unquote(operator)), lhs_condition, rhs_condition}
     end
   end
 
   for operator <- ~w(not)a do
-    defp build_condition(field_names, params, {unquote(operator), [], [clause]}) do
-      condition = build_condition(field_names, params, clause)
+    defp build_condition(field_sources, params, {unquote(operator), [], [clause]}) do
+      condition = build_condition(field_sources, params, clause)
       {guard_operator(unquote(operator)), condition}
     end
   end
 
-  defp build_condition(field_names, params, {:in, [], [field, values]}) do
-    field_target = resolve_field_target(field_names, field)
+  defp build_condition(field_sources, params, {:in, [], [field, values]}) do
+    field_target = resolve_field_target(field_sources, field)
 
     case resolve_param_values(params, values) do
       [] -> []
@@ -60,16 +60,16 @@ defmodule Etso.ETS.MatchSpecification do
     end
   end
 
-  defp build_condition(field_names, params, {:is_nil, [], [field]}) do
-    {:==, build_condition(field_names, params, field), nil}
+  defp build_condition(field_sources, params, {:is_nil, [], [field]}) do
+    {:==, build_condition(field_sources, params, field), nil}
   end
 
   defp build_condition(_, params, {:^, [], [index]}) do
     Enum.at(params, index)
   end
 
-  defp build_condition(field_names, _params, field) when is_tuple(field) do
-    resolve_field_target(field_names, field)
+  defp build_condition(field_sources, _params, field) when is_tuple(field) do
+    resolve_field_target(field_sources, field)
   end
 
   defp build_condition(_, _, value) do
@@ -80,19 +80,19 @@ defmodule Etso.ETS.MatchSpecification do
     []
   end
 
-  defp build_body(field_names, %Ecto.Query{select: %{fields: fields}}) do
+  defp build_body(field_sources, %Ecto.Query{select: %{fields: fields}}) do
     for field <- fields do
-      resolve_field_target(field_names, field)
+      resolve_field_target(field_sources, field)
     end
   end
 
-  defp resolve_field_target(field_names, {:json_extract_path, [], [field, path]}) do
-    field_target = resolve_field_target(field_names, field)
+  defp resolve_field_target(field_sources, {:json_extract_path, [], [field, path]}) do
+    field_target = resolve_field_target(field_sources, field)
     resolve_field_target_path(field_target, path)
   end
 
-  defp resolve_field_target(field_names, {{:., _, [{:&, [], [0]}, field_name]}, [], []}) do
-    field_index = 1 + Enum.find_index(field_names, fn x -> x == field_name end)
+  defp resolve_field_target(field_sources, {{:., _, [{:&, [], [0]}, field_name]}, [], []}) do
+    field_index = 1 + Enum.find_index(field_sources, fn x -> x == field_name end)
     :"$#{field_index}"
   end
 
