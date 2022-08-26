@@ -11,6 +11,12 @@ defmodule Etso.ETS.TableStructure do
     primary_key ++ (fields -- primary_key)
   end
 
+  def field_sources(schema) do
+    schema
+    |> field_names()
+    |> Enum.map(fn field -> schema.__schema__(:field_source, field) end)
+  end
+
   def fields_to_tuple(field_names, fields) do
     field_names
     |> Enum.map(&Keyword.get(fields, &1, nil))

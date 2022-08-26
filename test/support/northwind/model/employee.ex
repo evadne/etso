@@ -4,7 +4,7 @@ defmodule Northwind.Model.Employee do
 
   schema "employees" do
     # field :employee_id, :integer
-    field :reports_to, :integer
+    field :reports_to, :integer, source: :manager_id
     field :first_name, :string
     field :last_name, :string
     field :title, :string
