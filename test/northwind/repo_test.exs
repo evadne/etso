@@ -182,7 +182,7 @@ defmodule Northwind.RepoTest do
 
   test "Delete Where" do
     query = Model.Employee |> where([e], e.employee_id in [1, 5])
-    assert [a, b] = Repo.all(query)
+    assert [_a, _b] = Repo.all(query)
     assert {2, nil} = Repo.delete_all(query)
     assert [] == Repo.all(query)
     refute [] == Repo.all(Model.Employee)
@@ -190,7 +190,7 @@ defmodule Northwind.RepoTest do
 
   test "Delete Where Select" do
     query = Model.Employee |> where([e], e.employee_id in [1, 5])
-    assert [a, b] = Repo.all(query)
+    assert [_a, _b] = Repo.all(query)
     assert {2, list} = Repo.delete_all(query |> select([e], {e, e.employee_id}))
     assert is_list(list)
     assert Enum.any?(list, &(elem(&1, 1) == 1))
