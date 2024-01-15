@@ -14,8 +14,9 @@ defmodule Etso.Adapter do
   """
 
   @behaviour Ecto.Adapter
-  @behaviour Ecto.Adapter.Schema
   @behaviour Ecto.Adapter.Queryable
+  @behaviour Ecto.Adapter.Schema
+  @behaviour Ecto.Adapter.Storage
 
   @impl Ecto.Adapter
   defmacro __before_compile__(_opts), do: :ok
@@ -55,7 +56,8 @@ defmodule Etso.Adapter do
 
   for {implementation_module, behaviour_module} <- [
         {__MODULE__.Behaviour.Schema, Ecto.Adapter.Schema},
-        {__MODULE__.Behaviour.Queryable, Ecto.Adapter.Queryable}
+        {__MODULE__.Behaviour.Queryable, Ecto.Adapter.Queryable},
+        {__MODULE__.Behaviour.Storage, Ecto.Adapter.Storage}
       ] do
     for {name, arity} <- implementation_module.__info__(:functions) do
       args = Enum.map(1..arity, &{:"arg_#{&1}", [], Elixir})
