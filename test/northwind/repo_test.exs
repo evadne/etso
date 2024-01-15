@@ -5,7 +5,7 @@ defmodule Northwind.RepoTest do
 
   setup do
     repo_id = __MODULE__
-    repo_start = {Northwind.Repo, :start_link, []}
+    repo_start = {Repo, :start_link, []}
     {:ok, _} = start_supervised(%{id: repo_id, start: repo_start})
     :ok = Importer.perform()
   end
@@ -83,6 +83,28 @@ defmodule Northwind.RepoTest do
     Model.Employee
     |> where([x], x.employee_id in ^employee_ids)
     |> where([x], x.first_name in ^employee_first_names)
+    |> select([x], x.employee_id)
+    |> Repo.all()
+    |> Enum.sort()
+    |> (&assert(&1 == [3])).()
+  end
+
+  test "Where In Nested With and Without Pin" do
+    employee_ids = [3, 5, 7]
+
+    Model.Employee
+    |> where([x], x.employee_id in ^employee_ids)
+    |> where([x], x.first_name in ["Janet"])
+    |> select([x], x.employee_id)
+    |> Repo.all()
+    |> Enum.sort()
+    |> (&assert(&1 == [3])).()
+  end
+
+  test "Where In Nested Without Pin" do
+    Model.Employee
+    |> where([x], x.employee_id in [3, 5, 7])
+    |> where([x], x.first_name in ["Janet"])
     |> select([x], x.employee_id)
     |> Repo.all()
     |> Enum.sort()

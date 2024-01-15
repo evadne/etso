@@ -121,10 +121,6 @@ defmodule Etso.ETS.MatchSpecification do
     end
   end
 
-  defp resolve_param_values(params, {:^, [], [index]}) do
-    Enum.at(params, index)
-  end
-
   defp resolve_param_values(_params, values) when is_list(values) do
     values
   end
