@@ -18,8 +18,8 @@ defmodule Etso.Adapter.Supervisor do
   @impl Supervisor
   def init(repo) do
     children = [
-      {Etso.Adapter.TableSupervisor, repo},
-      {Etso.Adapter.TableRegistry, repo}
+      {Etso.Adapter.TableRegistry, repo},
+      {Etso.Adapter.TableSupervisor, repo}
     ]
 
     Supervisor.init(children, strategy: :one_for_one)
