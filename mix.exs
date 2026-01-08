@@ -27,9 +27,9 @@ defmodule Etso.MixProject do
 
   defp deps do
     [
-      {:ecto, "~> 3.8.3"},
-      {:dialyxir, "~> 1.0.0-rc.6", only: :dev, runtime: false},
-      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
+      {:ecto, "~> 3.13.5"},
+      {:dialyxir, "~> 1.4.7", only: :dev, runtime: false},
+      {:ex_doc, "~> 0.39.3", only: :dev, runtime: false},
       {:jason, "~> 1.1", only: :test, runtime: false}
     ]
   end
