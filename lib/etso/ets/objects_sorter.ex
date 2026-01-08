@@ -14,13 +14,26 @@ defmodule Etso.ETS.ObjectsSorter do
   end
 
   defp build_sort_predicates(%Ecto.Query{} = query) do
-    Enum.flat_map(query.order_bys, fn %Ecto.Query.QueryExpr{expr: list} ->
-      Enum.map(list, fn {direction, field} ->
-        {direction, Enum.find_index(query.select.fields, &(&1 == field))}
+    # FIXME: If the field is a function then the objects should be sorted
+    # based on the result of evaluating such function. The current implementation
+    # would only sort fields as-is
+
+    Enum.flat_map(query.order_bys, fn %Ecto.Query.ByExpr{expr: list} ->
+      Enum.map(list, fn {direction, order_by_field} ->
+        field_name = get_field_name(order_by_field)
+
+        {direction, Enum.find_index(query.select.fields, fn select_field ->
+          get_field_name(select_field) == field_name
+        end)}
       end)
     end)
   end
-
+  
+  defp get_field_name({{:., _, [{:&, _, [_]}, field_name]}, _, []}) do
+    # the field format is per Ecto.Query.field(index, field_name)
+    field_name
+  end
+  
   defp compare(lhs, rhs, [{direction, index} | predicates]) do
     case {direction, Enum.at(lhs, index), Enum.at(rhs, index)} do
       {_, lhs, rhs} when lhs == rhs -> compare(lhs, rhs, predicates)
